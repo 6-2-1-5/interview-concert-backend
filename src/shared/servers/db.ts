@@ -8,7 +8,7 @@ type tableName = 'users' | 'concerts';
 export class Db {
   private static readonly dataPath = path.join(
     process.cwd(),
-    'src/servers/db-data.json',
+    'src/shared/servers/db-data.json',
   );
 
   static readData<T>(tableName: tableName): T {
