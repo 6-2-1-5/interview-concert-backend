@@ -17,14 +17,16 @@
       "name": "Michael Jackson 2020",
       "description": "Est consectetur laborum officia dolore occaecat eu exercitation sunt magna et dolore Lorem.",
       "seat": 5000,
-      "reservedSeat": 235
+      "reservedSeat": 235,
+      "cancelledSeat": 20
     },
     {
       "id": 2,
       "name": "หมอลำ 2077",
       "description": "In dolore Lorem consequat officia incididunt laboris consequat dolore consequat qui velit.",
       "seat": 200,
-      "reservedSeat": 0
+      "reservedSeat": 0,
+      "cancelledSeat": 0
     }
   ]
 }

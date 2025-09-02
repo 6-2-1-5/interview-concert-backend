@@ -4,4 +4,5 @@ export class Concert {
   description: string;
   seat: number;
   reservedSeat: number;
+  cancelledSeat: number;
 }

@@ -16,6 +16,7 @@ export class ConcertsService {
       description: createConcertDto.description,
       seat: createConcertDto.seat,
       reservedSeat: 0,
+      cancelledSeat: 0,
     };
 
     concerts.push(newConcert);
