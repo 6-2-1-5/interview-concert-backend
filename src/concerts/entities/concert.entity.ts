@@ -1,1 +1,7 @@
-export class Concert {}
+export class Concert {
+  id: number;
+  name: string;
+  description: string;
+  seat: number;
+  reservedSeat: number;
+}
