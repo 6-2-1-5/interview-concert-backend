@@ -50,4 +50,28 @@ export class HistoriesService {
       };
     });
   }
+
+  findByUserId(userId: number): RelationHistoryDto[] {
+    const histories = Db.readData<History[]>('histories');
+    const userHistories = histories.filter(
+      (history) => history.userId === userId,
+    );
+
+    return userHistories.map((history) => {
+      const user = this.usersService.findOne(history.userId);
+      const concert = this.concertsService.findOne(history.concertId);
+
+      return {
+        id: history.id,
+        user: {
+          name: user?.name || 'Unknown User',
+        },
+        concert: {
+          name: concert?.name || 'Unknown Concert',
+        },
+        action: history.action,
+        createdAt: history.createdAt,
+      };
+    });
+  }
 }
