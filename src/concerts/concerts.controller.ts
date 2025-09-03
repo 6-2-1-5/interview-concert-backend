@@ -8,11 +8,14 @@ import {
   Delete,
   HttpStatus,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { ConcertsService } from './concerts.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { Concert } from './entities/concert.entity';
 import { AdminOnly } from '../shared/decorators/admin-only.decorator';
+import { AuthGuard } from '../shared/guards/auth.guard';
+import { UserId } from '../shared/decorators/user-id.decorator';
 
 @Controller('concerts')
 export class ConcertsController {
@@ -29,13 +32,10 @@ export class ConcertsController {
     return this.concertsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Concert {
-    const concert = this.concertsService.findOne(+id);
-    if (!concert) {
-      throw new HttpException('Concert not found', HttpStatus.NOT_FOUND);
-    }
-    return concert;
+  @Get('user')
+  @UseGuards(AuthGuard)
+  findAllWithReservationStatus(@UserId() userId: number) {
+    return this.concertsService.findAllWithReservationStatus(userId);
   }
 
   @Delete(':id')

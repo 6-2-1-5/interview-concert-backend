@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { Concert } from './entities/concert.entity';
 import { Db } from 'src/shared/servers/db';
+import { ReservationsService } from '../reservations/reservations.service';
 
 @Injectable()
 export class ConcertsService {
+  constructor(
+    @Inject(forwardRef(() => ReservationsService))
+    private readonly reservationsService: ReservationsService,
+  ) {}
   create(createConcertDto: CreateConcertDto): Concert {
     const concerts = Db.readData<Concert[]>('concerts');
     const newId =
@@ -46,5 +51,22 @@ export class ConcertsService {
     Db.writeData('concerts', concerts);
 
     return true;
+  }
+
+  findAllWithReservationStatus(
+    userId: number,
+  ): (Concert & { isReserved: boolean })[] {
+    const concerts = this.findAll();
+    const userReservations = this.reservationsService.findByUserId(userId);
+
+    return concerts.map((concert) => {
+      const isReserved = userReservations.some(
+        (reservation) => reservation.concertId === concert.id,
+      );
+      return {
+        ...concert,
+        isReserved,
+      };
+    });
   }
 }

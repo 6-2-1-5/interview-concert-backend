@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-type tableName = 'users' | 'concerts';
+type tableName = 'users' | 'concerts' | 'reservations' | 'histories';
 /**
  * This class is just for simulate database instance since the interview requirement is not required to use database
  */

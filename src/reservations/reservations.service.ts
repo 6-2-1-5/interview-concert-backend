@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { Reservation } from './entities/reservation.entity';
+import { ConcertsService } from '../concerts/concerts.service';
+import { HistoriesService } from '../histories/histories.service';
+import { Concert } from '../concerts/entities/concert.entity';
+import { Db } from '../shared/servers/db';
 
 @Injectable()
 export class ReservationsService {
-  create(createReservationDto: CreateReservationDto) {
-    return 'This action adds a new reservation';
-  }
+  constructor(
+    @Inject(forwardRef(() => ConcertsService))
+    private readonly concertsService: ConcertsService,
+    private readonly historiesService: HistoriesService,
+  ) {}
+  
+  findByUserId(userId: number): any[] {
+    const reservations = Db.readData<Reservation[]>('reservations');
+    const userReservations = reservations.filter(
+      (reservation) => reservation.userId === userId,
+    );
 
-  findAll() {
-    return `This action returns all reservations`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} reservation`;
-  }
-
-  update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} reservation`;
+    return userReservations.map((reservation) => {
+      const concert = this.concertsService.findOne(reservation.concertId);
+      return {
+        ...reservation,
+        concert,
+      };
+    });
   }
 }

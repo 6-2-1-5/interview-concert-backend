@@ -1,1 +1,4 @@
-export class CreateReservationDto {}
+export class CreateReservationDto {
+  userId: number;
+  concertId: number;
+}
