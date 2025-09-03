@@ -34,8 +34,23 @@
       "id": 1,
       "userId": 2,
       "concertId": 1,
-      "createdAt": "2023-01-01T00:00:00.000Z"
+      "createdAt": "2025-09-03T15:47:28.484Z"
     }
   ],
-  "histories": []
+  "histories": [
+    {
+      "id": 2,
+      "userId": 2,
+      "concertId": 1,
+      "action": "reserve",
+      "createdAt": "2025-09-03T14:47:01.483Z"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "concertId": 1,
+      "action": "cancel",
+      "createdAt": "2025-09-03T14:47:02.917Z"
+    }
+  ]
 }
