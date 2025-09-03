@@ -69,4 +69,75 @@ export class ConcertsService {
       };
     });
   }
+
+  incrementReservedSeat(concertId: number): Concert | null {
+    const concerts = Db.readData<Concert[]>('concerts');
+    const concertIndex = concerts.findIndex(
+      (concert) => concert.id === concertId,
+    );
+
+    if (concertIndex === -1) {
+      return null;
+    }
+
+    const concert = concerts[concertIndex];
+
+    if (concert.seat - concert.reservedSeat <= 0) {
+      return null; // not enough available seats
+    }
+
+    concerts[concertIndex] = {
+      ...concert,
+      reservedSeat: concert.reservedSeat + 1,
+    };
+    Db.writeData('concerts', concerts);
+
+    return concerts[concertIndex];
+  }
+
+  decrementReservedSeat(concertId: number): Concert | null {
+    const concerts = Db.readData<Concert[]>('concerts');
+    const concertIndex = concerts.findIndex(
+      (concert) => concert.id === concertId,
+    );
+
+    if (concertIndex === -1) {
+      return null;
+    }
+
+    const concert = concerts[concertIndex];
+
+    if (concert.reservedSeat <= 0) {
+      return null; // no seats to unreserve
+    }
+
+    concerts[concertIndex] = {
+      ...concert,
+      reservedSeat: concert.reservedSeat - 1,
+    };
+    Db.writeData('concerts', concerts);
+
+    return concerts[concertIndex];
+  }
+
+  incrementCancelledSeat(concertId: number): Concert | null {
+    const concerts = Db.readData<Concert[]>('concerts');
+    const concertIndex = concerts.findIndex(
+      (concert) => concert.id === concertId,
+    );
+
+    if (concertIndex === -1) {
+      return null;
+    }
+
+    const concert = concerts[concertIndex];
+
+    concerts[concertIndex] = {
+      ...concert,
+      cancelledSeat: concert.cancelledSeat + 1,
+    };
+    Db.writeData('concerts', concerts);
+
+    return concerts[concertIndex];
+  }
 }
