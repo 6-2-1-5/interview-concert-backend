@@ -1,7 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { Concert } from './entities/concert.entity';
-import { Db } from 'src/shared/servers/db';
+import { Db } from '../shared/servers/db';
 import { ReservationsService } from '../reservations/reservations.service';
 
 @Injectable()
@@ -53,9 +53,13 @@ export class ConcertsService {
     return true;
   }
 
-  findAllWithReservationStatus(
-    userId: number,
-  ): (Concert & { isReserved: boolean })[] {
+  findAllWithReservationStatus(userId: number): (Omit<
+    Concert,
+    'reservedSeat' | 'cancelledSeat'
+  > & {
+    isReserved: boolean;
+    isFull: boolean;
+  })[] {
     const concerts = this.findAll();
     const userReservations = this.reservationsService.findByUserId(userId);
 
@@ -63,9 +67,11 @@ export class ConcertsService {
       const isReserved = userReservations.some(
         (reservation) => reservation.concertId === concert.id,
       );
+      const { reservedSeat, cancelledSeat, ...concertWithoutSeats } = concert;
       return {
-        ...concert,
+        ...concertWithoutSeats,
         isReserved,
+        isFull: reservedSeat >= concert.seat,
       };
     });
   }
