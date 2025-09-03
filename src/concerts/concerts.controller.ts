@@ -12,12 +12,14 @@ import {
 import { ConcertsService } from './concerts.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { Concert } from './entities/concert.entity';
+import { AdminOnly } from '../shared/decorators/admin-only.decorator';
 
 @Controller('concerts')
 export class ConcertsController {
   constructor(private readonly concertsService: ConcertsService) {}
 
   @Post()
+  @AdminOnly()
   create(@Body() createConcertDto: CreateConcertDto): Concert {
     return this.concertsService.create(createConcertDto);
   }
@@ -37,6 +39,7 @@ export class ConcertsController {
   }
 
   @Delete(':id')
+  @AdminOnly()
   remove(@Param('id') id: string): { message: string } {
     const deleted = this.concertsService.remove(+id);
     if (!deleted) {
